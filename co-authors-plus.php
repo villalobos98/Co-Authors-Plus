@@ -117,7 +117,6 @@ class CoAuthors_Plus {
 
 		// Support infinite scroll for Guest Authors on author pages
 		add_filter( 'infinite_scroll_js_settings', array( $this, 'filter_infinite_scroll_js_settings' ), 10, 2 );
-
 	}
 
 	/**
@@ -137,6 +136,11 @@ class CoAuthors_Plus {
 				$this->force_guest_authors = true;
 			}
 		}
+
+        // Load the API REST class
+        // @todo Allow this to be enable/disabled like Guest Author functionality
+        require_once( dirname( __FILE__ ) . '/php/class-coauthors-api.php' );
+        $this->api = new CoAuthors_API($this);
 
 		// Maybe automatically apply our template tags
 		if ( apply_filters( 'coauthors_auto_apply_template_tags', false ) ) {
@@ -1465,6 +1469,7 @@ class CoAuthors_Plus {
 		// Send back the updated Open Graph Tags
 		return apply_filters( 'coauthors_open_graph_tags', $og_tags );
 	}
+
 }
 
 global $coauthors_plus;

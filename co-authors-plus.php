@@ -1345,6 +1345,7 @@ class CoAuthors_Plus {
 			'avatar_size' => absint( $this->gravatar_size ), 
 			'allow_add_guest_authors' => current_user_can( 'edit_users' ),
 			'loading_image_url' => admin_url( '/images/loading.gif' ), 
+			'nonce' => wp_create_nonce( 'coauthors' ),
 		);
 		
 		wp_localize_script( 'co-authors-plus-js', 'coAuthorsPlusStrings', $js_strings );

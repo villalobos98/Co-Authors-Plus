@@ -1083,21 +1083,6 @@ class CoAuthors_Plus {
 
 		// Loop through authors and store the necessary data in the response array
 		foreach ( $authors as $author ) {
-			// Fetch buddypress avatar if present
-			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-				$avatar = bp_core_fetch_avatar( array( 
-					'item_id' => $author->ID, 
-					'html' => false, 
-				));
-			// Get Gravatar URL if this is a guest author
-			} elseif ( 'guest-author' == $author->type ) {
-				$hash = md5( $author->user_email );
-				$avatar = sprintf( 'https://www.gravatar.com/avatar/%s?s=%s', $hash, $this->gravatar_size );
-			// Normal users - get the local avatar URL
-			} else {
-				$avatar = get_avatar_url( $author->ID, array( 'size' => $this->gravatar_size ) );
-			}
-
 			// Add the author to the response
 			$response[] = array( 
 				'id' => $author->ID,

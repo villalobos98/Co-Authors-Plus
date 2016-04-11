@@ -387,10 +387,7 @@ jQuery( document ).ready(function () {
 					.on( 'click', function( e ) {
 						e.preventDefault();
 						jQuery( '#cap_add_field' ).show();
-						jQuery( '#cap_dname_field' ).remove();
-						jQuery( '#cap_email_field' ).remove();
-						jQuery( '#cap_submit_field' ).remove();
-						jQuery( '#cap_cancel_field' ).remove();
+						jQuery( '#coauthors-addguest' ).remove();
 					});
 
 				// Submit button
@@ -450,8 +447,8 @@ jQuery( document ).ready(function () {
 								coauthors_add_coauthor( author, undefined, false );
 
 								/**
-								 * Manually add the delete button to the first row if there is
-								 * only two authors assigned now
+								 * Manually add the delete button to the first row if there are
+								 * only two authors assigned
 								 *
 								 * @todo This is a bit of a hack
 								 */
@@ -469,7 +466,6 @@ jQuery( document ).ready(function () {
 							} else {
 								// There was a problem adding the guest author. Tell the 
 								// user what the error was.
-<<<<<<< e6d6cbb54641ee9597ff61d2640eef51125f55cf
 								switch ( response.data ) {
 									// Nonse verification failed
 									case 'nonce': 

@@ -383,7 +383,6 @@ jQuery( document ).ready(function () {
 				var cancel_field = jQuery( '<a/>' )
 					.attr( 'href', '#' )
 					.attr( 'id', 'cap_cancel_field' )
-
 					.append( coAuthorsPlusStrings.label_cancel )
 					.on( 'click', function( e ) {
 						e.preventDefault();
@@ -448,8 +447,8 @@ jQuery( document ).ready(function () {
 								coauthors_add_coauthor( author, undefined, false );
 
 								/**
-								 * Manually add the delete button to the first row if there are
-								 * only two authors assigned
+								 * Manually add the delete button to the first row if there is
+								 * only two authors assigned now
 								 *
 								 * @todo This is a bit of a hack
 								 */

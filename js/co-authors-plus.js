@@ -447,8 +447,8 @@ jQuery( document ).ready(function () {
 								coauthors_add_coauthor( author, undefined, false );
 
 								/**
-								 * Manually add the delete button to the first row if there is
-								 * only two authors assigned now
+								 * Manually add the delete button to the first row if there are
+								 * only two authors assigned
 								 *
 								 * @todo This is a bit of a hack
 								 */

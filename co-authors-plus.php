@@ -1104,22 +1104,22 @@ class CoAuthors_Plus {
 	public function ajax_add_guest_author() {
 		// Verify nonce value
 		if ( ! isset( $_REQUEST['nonce'] ) || ! check_ajax_referer( 'coauthors', 'nonce' ) ) {
-			wp_send_json_error( 'Nonce verification failed.' );
+			wp_send_json_error( 'nonce' );
 		}
 
 		// Verify current user is allowed to add authors
 		if ( ! current_user_can( 'edit_users' ) ) {
-			wp_send_json_error( 'Current user is not allowed to create guest authors.' );
+			wp_send_json_error( 'notallowed' );
 		}
 
 		// Send an error if no Display Name provided
 		if ( empty( $_REQUEST['guest_dname'] ) ) {
-			wp_send_json_error( 'Display name field empty.' );
+			wp_send_json_error( 'nameempty' );
 		}
 
 		// Send an error if no Email provided
 		if ( empty( $_REQUEST['guest_email'] ) ) {
-			wp_send_json_error( 'Email address cannot be empty.' );
+			wp_send_json_error( 'emailempty' );
 		}
 
 		$display_name = sanitize_text_field( $_POST['guest_dname'] );
@@ -1131,22 +1131,22 @@ class CoAuthors_Plus {
 
 		// Bail if we have an invalid display name
 		if ( ! $display_name ) {
-			wp_send_json_error( 'Display name cannot be empty.' );
+			wp_send_json_error( 'nameinvalid' );
 		}
 
 		// Bail if we have an invalid email address
 		if ( ! $email ) {
-			wp_send_json_error( 'Email address is invalid.' );
+			wp_send_json_error( 'emailinvalid' );
 		}
 
 		// Check to see if there is a user account with this email address
 		if ( email_exists( $email ) ) {
-			wp_send_json_error( $email . ' is already associated with a user account. Please try searching instead of adding a guest author.' );
+			wp_send_json_error( 'emailregistered' );
 		}
 
 		// Check to see if there is a guest author with this email address
 		if ( $this->guest_authors->get_guest_author_by( 'user_email', $email ) ) {
-			wp_send_json_error( $email . ' is already associated with a guest author. Please try searching instead of adding a guest author.' );
+			wp_send_json_error( 'emailisguest' );
 		}
 
 		// Set up the guest author "post"
@@ -1180,7 +1180,7 @@ class CoAuthors_Plus {
 			wp_send_json_success( $response );
 		} else {
 			// Inserting post failed. Send a generic error.
-			wp_send_json_error( 'Error creating guest author.' );
+			wp_send_json_error( 'guestnotcreated' );
 		}
 	}
 

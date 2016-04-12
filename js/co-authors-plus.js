@@ -383,6 +383,7 @@ jQuery( document ).ready(function () {
 				var cancel_field = jQuery( '<a/>' )
 					.attr( 'href', '#' )
 					.attr( 'id', 'cap_cancel_field' )
+
 					.append( coAuthorsPlusStrings.label_cancel )
 					.on( 'click', function( e ) {
 						e.preventDefault();

@@ -951,12 +951,10 @@ class CoAuthors_Plus {
 	/**
 	 * Checks to see if the current user can set authors or not
 	 */
-	function current_user_can_set_authors( $post = null, $is_api_request = false ) {
-		global $typenow;
-
+	function current_user_can_set_authors( $post = null ) {
 		if ( ! $post ) {
 			$post = get_post();
-			if ( ! $post && ! $is_api_request) {
+			if ( ! $post ) {
 				return false;
 			}
 		}
@@ -968,22 +966,9 @@ class CoAuthors_Plus {
 			if ( ! $post_type ) {
 				return false;
 			}
-
-			$post_type_object = get_post_type_object( $post_type );
 		}
 
-		$current_user = wp_get_current_user();
-		if ( ! $current_user ) {
-			return false;
-		}
-		// Super admins can do anything
-		if ( function_exists( 'is_super_admin' ) && is_super_admin() ) {
-			return true;
-		}
-
-		$can_set_authors = isset( $current_user->allcaps['edit_others_posts'] ) ? $current_user->allcaps['edit_others_posts'] : false;
-
-		return apply_filters( 'coauthors_plus_edit_authors', $can_set_authors );
+		return $this->current_user_has_permissions();
 	}
 
 	/**
@@ -1716,6 +1701,26 @@ class CoAuthors_Plus {
 		return apply_filters( 'coauthors_open_graph_tags', $og_tags );
 	}
 
+	/**
+	 * Check if current user is admin or can edit other posts.
+	 *
+	 * @return bool|mixed|void
+	 */
+	public function current_user_has_permissions() {
+		$current_user = wp_get_current_user();
+
+		if ( ! $current_user ) {
+			return false;
+		}
+		// Super admins can do anything
+		if ( function_exists( 'is_super_admin' ) && is_super_admin() ) {
+			return true;
+		}
+
+		$can_set_authors = isset( $current_user->allcaps['edit_others_posts'] ) ? $current_user->allcaps['edit_others_posts'] : false;
+
+		return apply_filters( 'coauthors_plus_edit_authors', $can_set_authors );
+	}
 }
 
 global $coauthors_plus;

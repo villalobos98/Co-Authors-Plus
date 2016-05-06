@@ -1345,8 +1345,9 @@ class CoAuthors_Plus {
 			'nonce' => wp_create_nonce( 'coauthors' ),
 			'avatar_size' => absint( $this->gravatar_size ), 
 			'allow_add_guest_authors' => current_user_can( 'edit_users' ),
-			'loading_image_url' => admin_url( '/images/loading.gif' ), 
-			'autocomplete_endpoint' => home_url( '/wp-json/coauthors/v1/autocomplete' ), 
+			'loading_image_url' => esc_url_raw( admin_url( '/images/loading.gif' ) ), 
+			'wp_rest_endpoint' => esc_url_raw( rest_url() ), 
+			'wp_rest_nonce' => wp_create_nonce( 'wp_rest' ), 
 		);
 		
 		wp_localize_script( 'co-authors-plus-js', 'coAuthorsPlusStrings', $js_strings );

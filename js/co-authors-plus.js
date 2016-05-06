@@ -419,13 +419,17 @@ jQuery( document ).ready(function () {
 
 						jQuery( '#coauthors-addguest' ).append( spinner );
 
-						// Send AJAX request to add guest author
-						jQuery.post( ajaxurl, {
-							nonce: coAuthorsPlusStrings.nonce,
-							action: 'coauthors_add_guest_author',
-							guest_dname: jQuery( '#cap_dname_field' ).val(), 
-							guest_email: jQuery( '#cap_email_field' ).val()
-						}, function( response ) {
+						jQuery.ajax({
+							url: coAuthorsPlusStrings.wp_rest_endpoint + 'coauthors/v1/autocomplete', 
+							method: 'POST', 
+							beforeSend: function( xhr ) {
+								xhr.setRequestHeader( 'X-WP-Nonce', coAuthorsPlusStrings.wp_rest_nonce );
+							},
+							data: {
+								guest_name: jQuery( '#cap_dname_field' ).val(), 
+								guest_email: jQuery( '#cap_email_field' ).val()
+							}
+						}).done( function( data ) {
 							// Disable the buttons
 							jQuery( '#coauthors-addguest input' ).prop( 'disabled', false );
 							jQuery( '#coauthors-addguest a' ).show();

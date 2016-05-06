@@ -197,13 +197,18 @@ jQuery( document ).ready(function () {
 							return jQuery( this ).val();
 						}).get();
 
-					jQuery.post( ajaxurl, {
-						action: 'coauthors_ajax_suggest',
-						q: $co.val(),
-						exclude: existing_authors,
-						nonce: coAuthorsPlusStrings.nonce
-					}, function( data ) {
-						response( data.data );
+					jQuery.ajax( {
+						url: coAuthorsPlusStrings.wp_rest_endpoint + 'coauthors/v1/autocomplete', 
+						method: 'GET', 
+						beforeSend: function( xhr ) {
+							xhr.setRequestHeader( 'X-WP-Nonce', coAuthorsPlusStrings.wp_rest_nonce );
+						},
+						data: {
+							'q': $co.val(),
+							'exclude': existing_authors
+						}
+					}).done( function( data ) {
+						response( data.coauthors );
 					});
 				},
 				select: function( event, ui ) {

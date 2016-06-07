@@ -429,25 +429,25 @@ jQuery( document ).ready(function () {
 								guest_name: jQuery( '#cap_dname_field' ).val(), 
 								guest_email: jQuery( '#cap_email_field' ).val()
 							}
-						}).done( function( data ) {
+						}).done( function( response ) {
 							// Disable the buttons
 							jQuery( '#coauthors-addguest input' ).prop( 'disabled', false );
 							jQuery( '#coauthors-addguest a' ).show();
 							jQuery( '#coauthors-addguest .loading-image' ).remove();
 
-							if ( response.success ) {
+							if ( response ) {
 								// Guest author has been successfully added				
 								jQuery( '#cap_add_field' ).show();
 								jQuery( '#coauthors-addguest' ).remove();
 
 								// Create author object to pass to coauthors_add_coauthor
 								var author = {};
-								author.id = response.data.id;
-								author.login = response.data.login;
-								author.name = response.data.displayname;
-								author.email = response.data.email;
-								author.nicename = response.data.nicename;
-								author.avatar = response.data.avatar;
+								author.id = response.id;
+								author.login = response.login;
+								author.name = response.displayname;
+								author.email = response.email;
+								author.nicename = response.nicename;
+								author.avatar = response.avatar;
 
 								// Remove the blank autocomplete field, will readd it after
 								// the new coauthor has been added to the list.

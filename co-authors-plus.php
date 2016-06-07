@@ -1093,12 +1093,109 @@ class CoAuthors_Plus {
 				'nicename' => $author->user_nicename, 
 				'avatar' => $this->get_avatar_url( $author->ID, $author->user_email, $author->type ), 
 			);
+<<<<<<< HEAD
 		}
 
 		// Send the response
 		wp_send_json_success( $response );
 	}
 
+=======
+		}
+
+		// Send the response
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * AJAX hook to add a guest author
+	 */
+	public function ajax_add_guest_author() {
+		// Verify nonce value
+		if ( ! isset( $_REQUEST['nonce'] ) || ! check_ajax_referer( 'coauthors', 'nonce' ) ) {
+			wp_send_json_error( 'nonce' );
+		}
+
+		// Verify current user is allowed to add authors
+		if ( ! current_user_can( 'edit_users' ) ) {
+			wp_send_json_error( 'notallowed' );
+		}
+
+		// Send an error if no Display Name provided
+		if ( empty( $_REQUEST['guest_dname'] ) ) {
+			wp_send_json_error( 'nameempty' );
+		}
+
+		// Send an error if no Email provided
+		if ( empty( $_REQUEST['guest_email'] ) ) {
+			wp_send_json_error( 'emailempty' );
+		}
+
+		$display_name = sanitize_user( $_POST['guest_dname'] );
+		$email = sanitize_email( $_POST['guest_email'] );
+		$login = sanitize_title( $display_name );
+		$display_name_key = $this->guest_authors->get_post_meta_key( 'display_name' );
+		$email_key = $this->guest_authors->get_post_meta_key( 'user_email' );
+		$login_key = $this->guest_authors->get_post_meta_key( 'user_login' );
+
+		// Bail if we have an invalid display name
+		if ( ! $display_name ) {
+			wp_send_json_error( 'nameinvalid' );
+		}
+
+		// Bail if we have an invalid email address
+		if ( ! $email ) {
+			wp_send_json_error( 'emailinvalid' );
+		}
+
+		// Check to see if there is a user account with this email address
+		if ( email_exists( $email ) ) {
+			wp_send_json_error( 'emailregistered' );
+		}
+
+		// Check to see if there is a guest author with this email address
+		if ( $this->guest_authors->get_guest_author_by( 'user_email', $email ) ) {
+			wp_send_json_error( 'emailisguest' );
+		}
+
+		// Set up the guest author "post"
+		$post = array( 
+			'post_type' => 'guest-author', 
+			'post_title' => $display_name, 
+			'post_name' => $this->guest_authors->get_post_meta_key( $login ), 
+			'post_status' => 'publish', 
+		);
+
+		// Try to insert the guest author post
+		if ( $post_id = wp_insert_post( $post ) ) {
+			update_post_meta( $post_id, $display_name_key, $display_name );
+			update_post_meta( $post_id, $login_key, $login );
+			update_post_meta( $post_id, $email_key, $email );
+
+			// Add the post terms to the guest author post
+			$author = $this->guest_authors->get_guest_author_by( 'ID', $post_id );
+			$author_term = $this->update_author_term( $author );
+			wp_set_post_terms( $post_id, array( $author_term->slug ), $this->coauthor_taxonomy, false );
+
+			// Build the AJAX response
+			$response = array( 
+				'id' => absint( $post_id ), 
+				'login' => $login, 
+				'email' => $email, 
+				'displayname' => $display_name, 
+				'nicename' => $login, 
+				'avatar' => $this->get_avatar_url( $post_id, $email, 'guest-author' ), 
+			);
+
+			// Success - send the response
+			wp_send_json_success( $response );
+		} else {
+			// Inserting post failed. Send a generic error.
+			wp_send_json_error( 'guestnotcreated' );
+		}
+	}
+
+>>>>>>> 76ce100e67cfa8c65d2dffdeb951b851e69d56c8
 	/**
 	 * Return the proper avatar url in the context of Co-Authors-Plus
 	 * @param  int $user_id       The user ID
@@ -1254,9 +1351,14 @@ class CoAuthors_Plus {
 			'ajax_error_emailregistered' => __( 'Email address is already associated with a WordPress user account. Please try searching instead of adding a guest author.', 'co-authors-plus' ), 
 			'ajax_error_emailisguest' => __( 'Email address is already associated with a guest author. Please try searching instead of adding a guest author.', 'co-authors-plus' ), 
 			'ajax_error_guestnotcreated' => __( 'Error creating guest author.', 'co-authors-plus' ), 
+<<<<<<< HEAD
 			'avatar_size' => absint( $this->gravatar_size ), 
 			'loading_image_url' => admin_url( '/images/loading.gif' ), 
 			'nonce' => wp_create_nonce( 'coauthors' ),
+=======
+			'nonce' => wp_create_nonce( 'coauthors' ),
+			'avatar_size' => absint( $this->gravatar_size ), 
+>>>>>>> 76ce100e67cfa8c65d2dffdeb951b851e69d56c8
 			'allow_add_guest_authors' => current_user_can( 'edit_users' ),
 			'loading_image_url' => esc_url_raw( admin_url( '/images/loading.gif' ) ), 
 			'wp_rest_endpoint' => esc_url_raw( rest_url() ), 

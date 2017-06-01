@@ -51,6 +51,7 @@ before_script:
         elif [[ ${TRAVIS_PHP_VERSION:0:3} != "5.2" ]]; then
           composer global require "phpunit/phpunit=4.8.*"
         fi
+    - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs --config-show; $PHPCS_DIR/bin/phpcs -i; fi
     - phpunit --version
 
 script:

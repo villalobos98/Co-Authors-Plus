@@ -13,6 +13,9 @@ class Test_Template_Tags extends CoAuthorsPlus_TestCase {
 
 		parent::setUp();
 
+		$this->author1 = $this->factory->user->create( array( 'role' => 'author', 'user_login' => 'author1' ) );
+		$this->editor1 = $this->factory->user->create( array( 'role' => 'editor', 'user_login' => 'editor2' ) );
+
 		$this->template_post_id = wp_insert_post( array(
 			'post_author'  => $this->author1,
 			'post_status'  => 'publish',

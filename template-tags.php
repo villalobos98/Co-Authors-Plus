@@ -14,8 +14,7 @@ function get_coauthors( $post_id = 0 ) {
 	}
 
 	if ( $post_id ) {
-		$coauthor_terms = get_the_terms( $post_id, $coauthors_plus->coauthor_taxonomy );
-
+		$coauthor_terms = cap_get_coauthor_terms_for_post( $post_id );
 		if ( is_array( $coauthor_terms ) && ! empty( $coauthor_terms ) ) {
 			foreach ( $coauthor_terms as $coauthor ) {
 				$coauthor_slug = preg_replace( '#^cap\-#', '', $coauthor->slug );
@@ -63,6 +62,10 @@ function is_coauthor_for_post( $user, $post_id = 0 ) {
 	if ( is_numeric( $user ) ) {
 		$user = get_userdata( $user );
 		$user = $user->user_login;
+	} else if ( isset( $user->user_login ) ) {
+		$user = $user->user_login;
+	} else {
+		return false;
 	}
 
 	foreach ( $coauthors as $coauthor ) {
@@ -80,7 +83,7 @@ class CoAuthorsIterator {
 	var $authordata_array;
 	var $count;
 
-	function CoAuthorsIterator( $postID = 0 ) {
+	function __construct( $postID = 0 ) {
 		global $post, $authordata, $wpdb;
 		$postID = (int) $postID;
 		if ( ! $postID && $post ) {
@@ -88,7 +91,7 @@ class CoAuthorsIterator {
 		}
 
 		if ( ! $postID ) {
-			trigger_error( __( 'No post ID provided for CoAuthorsIterator constructor. Are you not in a loop or is $post not set?', 'co-authors-plus' ) ); // return null;
+			trigger_error( esc_html__( 'No post ID provided for CoAuthorsIterator constructor. Are you not in a loop or is $post not set?', 'co-authors-plus' ) ); // return null;
 		}
 
 		$this->original_authordata = $this->current_author = $authordata;
@@ -109,7 +112,7 @@ class CoAuthorsIterator {
 		}
 
 		//At the beginning of the loop
-		if ( $this->position == 0 && ! empty( $authordata ) ) {
+		if ( 0 === $this->position && ! empty( $authordata ) ) {
 			$this->original_authordata = $authordata;
 		}
 
@@ -246,6 +249,15 @@ function coauthors_posts_links( $between = null, $betweenLast = null, $before = 
  * @return string
  */
 function coauthors_posts_links_single( $author ) {
+	// Return if the fields we are trying to use are not sent
+	if ( ! isset( $author->ID, $author->user_nicename, $author->display_name ) ) {
+		_doing_it_wrong(
+			'coauthors_posts_links_single',
+			'Invalid author object used',
+			'3.2'
+		);
+		return;
+	}
 	$args = array(
 		'before_html' => '',
 		'href' => get_author_posts_url( $author->ID, $author->user_nicename ),
@@ -384,7 +396,7 @@ function coauthors_links_single( $author ) {
  * @param string $after What should appear after the presentation of co-authors
  * @param bool $echo Whether the co-authors should be echoed or returned. Defaults to true.
  */
-function coauthors_IDs( $between = null, $betweenLast = null, $before = null, $after = null, $echo = true ) {
+function coauthors_ids( $between = null, $betweenLast = null, $before = null, $after = null, $echo = true ) {
 	return coauthors__echo( 'ID', 'field', array(
 		'between' => $between,
 		'betweenLast' => $betweenLast,
@@ -472,7 +484,7 @@ function coauthors_wp_list_authors( $args = array() ) {
 		}
 
 		if ( ! $args['html'] ) {
-			if ( $author->post_count == 0 ) {
+			if ( 0 === $author->post_count ) {
 				if ( ! $args['hide_empty'] ) {
 					$return .= $name . ', ';
 				}
@@ -484,10 +496,10 @@ function coauthors_wp_list_authors( $args = array() ) {
 			continue;
 		}
 
-		if ( ! ( $author->post_count == 0 && $args['hide_empty'] ) && 'list' == $args['style'] ) {
+		if ( ! ( 0 === $author->post_count && $args['hide_empty'] ) && 'list' == $args['style'] ) {
 			$return .= '<li>';
 		}
-		if ( $author->post_count == 0 ) {
+		if ( 0 === $author->post_count ) {
 			if ( ! $args['hide_empty'] ) {
 				$link = $name;
 			}
@@ -528,7 +540,7 @@ function coauthors_wp_list_authors( $args = array() ) {
 			}
 		}
 
-		if ( ! ( $author->post_count == 0 && $args['hide_empty'] ) && 'list' == $args['style'] ) {
+		if ( ! ( 0 === $author->post_count && $args['hide_empty'] ) && 'list' == $args['style'] ) {
 			$return .= $link . '</li>';
 		} else if ( ! $args['hide_empty'] ) {
 			$return .= $link . ', ';

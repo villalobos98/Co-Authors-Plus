@@ -20,6 +20,7 @@ class CoAuthors_Template_Filters {
 	}
 
 	function filter_the_author_posts_link() {
+		remove_filter( 'the_author', array( $this, 'filter_the_author' ) );
 		return coauthors_posts_links( null, null, null, null, false );
 	}
 

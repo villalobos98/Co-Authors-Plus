@@ -345,12 +345,16 @@ function coauthors_nicknames( $between = null, $betweenLast = null, $before = nu
  * @param bool $echo Whether the co-authors should be echoed or returned. Defaults to true.
  */
 function coauthors_links( $between = null, $betweenLast = null, $before = null, $after = null, $echo = true ) {
-	return coauthors__echo( 'coauthors_links_single', 'callback', array(
+	global $coauthors_plus_template_filters;
+	remove_filter( 'the_author', array( $coauthors_plus_template_filters, 'filter_the_author' ) );
+	$return = coauthors__echo( 'coauthors_links_single', 'callback', array(
 		'between' => $between,
 		'betweenLast' => $betweenLast,
 		'before' => $before,
 		'after' => $after,
 	), null, $echo );
+	add_filter( 'the_author', array( $coauthors_plus_template_filters, 'filter_the_author' ) );
+	return $return;
 }
 
 /**

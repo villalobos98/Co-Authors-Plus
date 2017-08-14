@@ -236,3 +236,17 @@ add_action( 'init', function() {
 		add_filter( 'author_link', 'wpcom_vip_cap_replace_author_link', 99, 3 );
 	}
 }, 9 );
+
+/**
+ * Do not modify user counts during REST API requests pending CAP support for the API
+ *
+ * See more background on this issue here: https://github.com/Automattic/Co-Authors-Plus/issues/447
+ */
+add_action( 'init', function() {
+        add_action( 'rest_api_init', function() {
+                global $coauthors_plus;
+                if ( isset( $coauthors_plus ) && has_filter( 'get_usernumposts', array( $coauthors_plus, 'filter_count_user_posts' ) ) && defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+                        remove_filter( 'get_usernumposts', array( $coauthors_plus, 'filter_count_user_posts' ), 10, 2 );
+                }
+        }, 10 );
+}, 10 );

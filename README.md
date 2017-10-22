@@ -61,7 +61,17 @@ $ wp --url=example.com co-authors-plus create-terms-for-posts
 ## Changelog ##
 
 **3.3**
-* ...
+* Many performance improvements
+* A more successful `create-terms-for-posts` CLI command
+* Various consistency improvements
+* Numerous bug fixes
+* Introduced new hooks, `cap_guest_author_create` and `cap_guest_author_del`
+* Added aesthetically pleasing README.md!
+* Fixed guest author post counts in the admin
+
+Full details at https://github.com/Automattic/Co-Authors-Plus/milestone/17?closed=1
+
+Many people made this release happen - thank you! Props bcampeau danielbachhuber david-binda haleeben johnbillion jordie23 joshbetz jqueryalmeida lexicality mattoperry matthewspencer maxfenton mdchiragpatel mikengarrett mjangda philipjohn pkevan rebeccahum ryanmarkel sboisvert srguglielmo trepmal tylerdurdon
 
 **3.2.2**
 * Fix broken author ordering in 4.7+ (props mslinnea)

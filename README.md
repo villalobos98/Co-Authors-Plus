@@ -7,7 +7,10 @@
 * Stable tag: 3.2.2
 
 Assign multiple bylines to posts, pages, and custom post types via a search-as-you-type input box
-
+#### CONTRIBUTIONS TO CODE BY ISAIAS VILLALOBOS ###
+* I am ready to make some small changes.
+* Hello world!!
+#### END OF CONTRIBUTIONS TO CODE BY ISAIAS VILLALOBOS ###
 ## Description 
 
 Assign multiple bylines to posts, pages, and custom post types via a search-as-you-type input box. Co-authored posts appear on a co-author's archive page and in their feed. Co-authors may edit the posts they are associated with, and co-authors who are contributors may only edit posts if they have not been published (as is core behavior).
